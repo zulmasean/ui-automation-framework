@@ -1,0 +1,55 @@
+name: Selenium Automation Test
+
+on:
+  push:
+    branches:
+     - main
+
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  automation-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Run Automation Test
+        run: |
+          mvn clean test
+
+      - name: Upload Allure Result
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: target/allure-results
+
+      - name: Upload Surefire Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-report
+          path: target/surefire-reports
