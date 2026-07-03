@@ -13,10 +13,10 @@ jobs:
   automation-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -24,6 +24,10 @@ jobs:
 
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
+
+      - name: Verify Chrome Version
+        run: |
+          google-chrome --version
 
       - name: Install Allure
         run: |
