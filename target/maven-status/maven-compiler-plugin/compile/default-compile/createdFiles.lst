@@ -1,0 +1,3 @@
+config/ConfigReader.class
+pages/LoginPage.class
+drivers/DriverManager.class
